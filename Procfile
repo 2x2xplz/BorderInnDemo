@@ -1,0 +1,1 @@
+web: java -jar $JAVA_OPTS build/libs/BorderInnDirections.jar
