@@ -3,10 +3,8 @@ import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.ConfigSource
 import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.json.JsonPropertySource
-import com.zaxxer.hikari.HikariDataSource
 import org.http4k.serverless.ApiGatewayV2LambdaFunction
 import org.ktorm.database.Database
-import org.ktorm.support.postgresql.PostgreSqlDialect
 import java.io.File
 
 
@@ -33,20 +31,14 @@ val config: AppConfig = ConfigLoader.Builder()
     .loadConfigOrThrow()
 
 
-// Hikari is our database connection pool
-object connHikari : HikariDataSource() {
-    init {
-        this.jdbcUrl = config.db.url
-        this.username = config.db.username
-        this.password = config.db.password
-        this.maximumPoolSize = 4
-        this.driverClassName = "org.h2.Driver" // pg driver is automatically registered
-    }
-}
-
-
-// 'Database' is a ktorm object
-val pg: Database = Database.connect(connHikari, dialect = PostgreSqlDialect())
+// normally would use Hikari conn pool...
+//   but this is a demo project, with limited resources and low connection limits!
+val pg: Database = Database.connect(
+    url = config.db.url,
+    driver = "org.postgresql.Driver",
+    user = config.db.username,
+    password = config.db.password
+)
 
 
 // provided by http4k - will be used by AWS Lambda

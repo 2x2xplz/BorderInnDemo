@@ -6,16 +6,17 @@ import java.time.temporal.ChronoUnit
 
 object StartingPoints: Table<Nothing>("startingpoints") {
     val postalCode : Column<String> = varchar("postalcode")
-    val stateAbbr : Column<String> = varchar("state")
+    val stateAbbr : Column<String> = varchar("stateabbr")
     val searchtime : Column<Instant> = timestamp("searchtime")
 }
 
 /*
-    create table startingpoints (
-        postalcode varchar(20),
-        state varchar(20)
-        searchtime timestamp with time zone
-    )
+create table startingpoints
+  (
+    postalcode varchar( 20 ) not null,
+    stateabbr varchar not null,
+    searchtime timestamp with time zone not null
+  )
 */
 
 fun getMostCommon(daysBack: Long = 7) : String =
