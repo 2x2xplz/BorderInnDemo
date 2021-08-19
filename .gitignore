@@ -3,7 +3,7 @@ build/*
 */build/*
 #gradle/*
 .gradle/*
-gradlew*
+gradlew.bat
 **/data/**
 
 # might ease up on this later, maybe check in yaml
