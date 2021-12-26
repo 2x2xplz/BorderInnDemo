@@ -9,17 +9,21 @@ plugins {
 }
 
 group = "com.example"
-version = "0.1.1"
+version = "0.1.2"
 
 
 repositories {
     mavenCentral()
+    maven { url = uri("file://E:/Kotlin/Hoplite/hoplite") }
+    flatDir {
+        dirs("E:/Kotlin/Hoplite/hoplite")
+    }
 }
 
 dependencies {
     val kotlinxSerVersion = "1.2.2"
     val ktormVersion = "3.4.1"
-    val http4kVersion = "4.11.0.0"
+    val http4kVersion = "4.14.0.0"
     val hopliteVersion = "1.4.4"
 
     implementation(kotlin("stdlib-jdk8"))
@@ -67,7 +71,7 @@ shadowJar.apply {
     exclude("hoplite_*.*")
     exclude("config_*.*")
 
-    archiveFileName.set("BorderInnDirections.jar")
+    archiveFileName.set("BorderInnDirectionsHT.jar")
 }
 
 

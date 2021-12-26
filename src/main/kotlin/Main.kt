@@ -15,18 +15,29 @@ data class Destination(val name: String, val lat: Float, val lon: Float, val tim
 data class AppConfig(val portNumber: Int = System.getenv("PORT")?.toInt() ?: 0,
                      val platform: String = "dev",
                      val destination: Destination, val db: DBConfig, val geo: GeoAPI)
+//val configX: AppConfig = ConfigLoader.Builder()
+//    .addSource(JsonPropertySource(System.getenv("HOPLITE_JSON") ?: System.getProperty("HOPLITE_JSON") ?: "{}"))
+//    .apply {
+//        // Hoplite handles files on the classPath very well
+//        //   a little extra work to just load any file on the filesystem
+//        System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME")?.let { configFile ->
+//            if (!File(configFile).exists())
+//                throw Exception("specified config file ($configFile) doesn't exist")
+//            this.addPropertySource(
+//                ConfigFilePropertySource(
+//                    ConfigSource.FileSource(File(configFile)), optional = true))
+//        }
+//    }
+//    .addSource(PropertySource.resource("/config_dev.yaml", optional = true))
+//    .build()
+//    .loadConfigOrThrow()
+
 val config: AppConfig = ConfigLoader.Builder()
     .addSource(JsonPropertySource(System.getenv("HOPLITE_JSON") ?: System.getProperty("HOPLITE_JSON") ?: "{}"))
-    .apply {
-        System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME")?.let { configFile ->
-            if (!File(configFile).exists())
-                throw Exception("specified config file ($configFile) doesn't exist")
-            this.addPropertySource(
-                ConfigFilePropertySource(
-                    ConfigSource.FileSource(File(configFile)), optional = true))
-        }
-    }
-    .addSource(PropertySource.resource("/config_dev.yaml", optional = true))
+    //.addSource(ExternalFilePropertySource(System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME") ?: "", optional = true))
+    //.addSource(ConfigFilePropertySource(ConfigSource.FileSource(File(System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME") ?: "")), optional = true))
+    .addSource(PropertySource.file(File(System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME") ?: ""), optional = true))
+    .addSource(PropertySource.resource("/config_dev.yaml"))
     .build()
     .loadConfigOrThrow()
 
