@@ -36,7 +36,7 @@ fun directionsHandler(startingPoint: String) : String {
         val duration : Double = segment.duration.div(60.0) // convert seconds to minutes
         val steps : List<String> = segment.steps.map { step -> "${step.instruction} (${String.format("%.1f", step.distance.times(0.62137).div(1000.0))} mi.)" }
         return listOf<String>(
-            "You are ${distance.toInt()} miles away from ${config.destination.name}!.",
+            "You are ${distance.toInt()} miles away from ${config.destination.name}!",
             "Follow the directions below and you'll be here in ${if (duration > 60) "${duration.toInt().div(60)} hours and " else ""}${duration.mod(60.0).toInt() } minutes.",
             "",
             "DIRECTIONS TO ${config.destination.name.uppercase()}:",

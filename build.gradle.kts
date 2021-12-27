@@ -9,22 +9,18 @@ plugins {
 }
 
 group = "com.example"
-version = "0.1.2"
+version = "0.2.0"
 
 
 repositories {
     mavenCentral()
-    maven { url = uri("file://E:/Kotlin/Hoplite/hoplite") }
-    flatDir {
-        dirs("E:/Kotlin/Hoplite/hoplite")
-    }
 }
 
 dependencies {
-    val kotlinxSerVersion = "1.2.2"
+    val kotlinxSerVersion = "1.3.1"
     val ktormVersion = "3.4.1"
     val http4kVersion = "4.14.0.0"
-    val hopliteVersion = "1.4.4"
+    val hopliteVersion = "1.4.16"
 
     implementation(kotlin("stdlib-jdk8"))
 
@@ -32,7 +28,7 @@ dependencies {
 
     implementation("org.ktorm:ktorm-core:$ktormVersion")
     implementation("org.ktorm:ktorm-support-postgresql:$ktormVersion")
-    implementation("org.postgresql:postgresql:42.2.23")  // Postgres driver Java 8+
+    implementation("org.postgresql:postgresql:42.3.1")  // Postgres driver Java 8+
     implementation("com.h2database:h2:1.4.200") // H2 DB driver (for mocking)
     implementation("com.zaxxer:HikariCP:5.0.0")  // Hikari connection pool
 
@@ -71,7 +67,7 @@ shadowJar.apply {
     exclude("hoplite_*.*")
     exclude("config_*.*")
 
-    archiveFileName.set("BorderInnDirectionsHT.jar")
+    archiveFileName.set("BorderInnDirections.jar")
 }
 
 

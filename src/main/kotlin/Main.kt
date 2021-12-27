@@ -1,6 +1,4 @@
-import com.sksamuel.hoplite.ConfigFilePropertySource
 import com.sksamuel.hoplite.ConfigLoader
-import com.sksamuel.hoplite.ConfigSource
 import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.json.JsonPropertySource
 import org.http4k.serverless.ApiGatewayV2LambdaFunction
@@ -8,37 +6,23 @@ import org.ktorm.database.Database
 import java.io.File
 
 
-// Hoplite setup
+// Hoplite configuration setup
 data class GeoAPI(val apiKey: String, val host: String = "https://api.openrouteservice.org")
 data class DBConfig(val url: String = "jdbc:h2:mem:", val username: String, val password: String)
 data class Destination(val name: String, val lat: Float, val lon: Float, val timeZone: String)
 data class AppConfig(val portNumber: Int = System.getenv("PORT")?.toInt() ?: 0,
                      val platform: String = "dev",
                      val destination: Destination, val db: DBConfig, val geo: GeoAPI)
-//val configX: AppConfig = ConfigLoader.Builder()
-//    .addSource(JsonPropertySource(System.getenv("HOPLITE_JSON") ?: System.getProperty("HOPLITE_JSON") ?: "{}"))
-//    .apply {
-//        // Hoplite handles files on the classPath very well
-//        //   a little extra work to just load any file on the filesystem
-//        System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME")?.let { configFile ->
-//            if (!File(configFile).exists())
-//                throw Exception("specified config file ($configFile) doesn't exist")
-//            this.addPropertySource(
-//                ConfigFilePropertySource(
-//                    ConfigSource.FileSource(File(configFile)), optional = true))
-//        }
-//    }
-//    .addSource(PropertySource.resource("/config_dev.yaml", optional = true))
-//    .build()
-//    .loadConfigOrThrow()
+
 
 val config: AppConfig = ConfigLoader.Builder()
+    // try loading a config JSON string directly
     .addSource(JsonPropertySource(System.getenv("HOPLITE_JSON") ?: System.getProperty("HOPLITE_JSON") ?: "{}"))
-    //.addSource(ExternalFilePropertySource(System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME") ?: "", optional = true))
-    //.addSource(ConfigFilePropertySource(ConfigSource.FileSource(File(System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME") ?: "")), optional = true))
+    // try a config file
     .addSource(PropertySource.file(File(System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME") ?: ""), optional = true))
-    .addSource(PropertySource.resource("/config_dev.yaml"))
-    .build()
+    // fallback to dev config (should not load in production)
+    .addSource(PropertySource.resource("/config_dev.yaml", optional = true))
+    .build() //.also { println("HOPLITE_JSON : ${System.getProperty("HOPLITE_JSON")}, HOPLITE_FILENAME : ${System.getProperty("HOPLITE_FILENAME")}") }
     .loadConfigOrThrow()
 
 

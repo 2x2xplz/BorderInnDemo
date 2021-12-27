@@ -19,6 +19,15 @@ val geocodeLens : BiDiBodyLens<GeocodeResponse> = Body.auto<GeocodeResponse>().t
 val directionsLens : BiDiBodyLens<DirectionsResponse> = Body.auto<DirectionsResponse>().toLens()
 
 
+val rootMessage : String = """
+    <p>App root served on port ${config.portNumber}</p>
+    <p>Usage: <code>[rootURL]/from/[city]</code> or <code>[rootURL]/from?start=[city]</code></p>
+    <p>This is a demo app for learning purposes. It relies upon turn-by-turn directions provided by <a href="https://api.openrouteservice.org">api.openrouteservice.org</a>, which is a free service and is often offline or overloaded. Please be patient and try again later if your query is not working. Thanks to openrouteservice for providing this API.</p>
+    <p>The Border Inn, Baker, NV<br />
+        <img src="https://borderinncasino.com/wp-content/uploads/2018/06/the-border-inn-4.jpg">
+    </p>
+""".trimIndent()
+
 val appRoutes : RoutingHttpHandler = routes(
 
     // app will accept the user's starting point either as a path segment or as a query param
@@ -30,9 +39,9 @@ val appRoutes : RoutingHttpHandler = routes(
         Response(Status.OK).body(queryResult)
     },
 
-    "/" bind Method.GET to { Response(Status.OK).body("app root served on port ${config.portNumber}") }
+    "/" bind Method.GET to { Response(Status.OK).body(rootMessage) }
 )
 
-
 val serverApp = appRoutes.asServer(Undertow(config.portNumber))
+
 
