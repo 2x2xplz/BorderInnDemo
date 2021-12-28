@@ -41,7 +41,7 @@ fun directionsHandler(startingPoint: String) : String {
             "",
             "DIRECTIONS TO ${config.destination.name.uppercase()}:",
             *(steps.toTypedArray()) // spread operator '*' converts an array into its elements
-        ).joinToString("\n").also {
+        ).joinToString("<br />\n").also {
 
             // let's save the search query in the database
             pg.insert(StartingPoints) { columns ->

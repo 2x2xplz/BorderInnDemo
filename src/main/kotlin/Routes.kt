@@ -1,14 +1,14 @@
 import org.http4k.core.*
-import org.http4k.lens.BiDiBodyLens
-import org.http4k.lens.Path
-import org.http4k.lens.Query
-import org.http4k.lens.string
+import org.http4k.core.ContentType.Companion.TEXT_HTML
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import org.http4k.format.KotlinxSerialization.auto
+import org.http4k.lens.*
+import org.http4k.lens.Header.CONTENT_TYPE
+import org.http4k.routing.header
 
 
 // all the http4k Lenses for extracting search parameters and de-serialization of API responses
@@ -28,6 +28,10 @@ val rootMessage : String = """
     </p>
 """.trimIndent()
 
+val contentTypeHTMLFilter : Filter = Filter { handler ->
+    { handler(it).with(CONTENT_TYPE of TEXT_HTML) }
+}
+
 val appRoutes : RoutingHttpHandler = routes(
 
     // app will accept the user's starting point either as a path segment or as a query param
@@ -40,7 +44,7 @@ val appRoutes : RoutingHttpHandler = routes(
     },
 
     "/" bind Method.GET to { Response(Status.OK).body(rootMessage) }
-)
+).withFilter(contentTypeHTMLFilter)
 
 val serverApp = appRoutes.asServer(Undertow(config.portNumber))
 
