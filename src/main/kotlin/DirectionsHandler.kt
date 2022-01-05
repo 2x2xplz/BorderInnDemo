@@ -1,14 +1,15 @@
 import org.http4k.client.OkHttp
-import org.http4k.core.HttpHandler
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
+import org.http4k.core.*
+import org.http4k.format.KotlinxSerialization.auto
+import org.http4k.lens.BiDiBodyLens
 import org.ktorm.dsl.insert
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
 
 val ok : HttpHandler = OkHttp() // http4k client with OkHttp implementation
+val geocodeLens : BiDiBodyLens<GeocodeResponse> = Body.auto<GeocodeResponse>().toLens()
+val directionsLens : BiDiBodyLens<DirectionsResponse> = Body.auto<DirectionsResponse>().toLens()
 
 // for each search, we need to make 2 API calls -- to convert the place name to coordinates, then to get directions based on the coordinates
 fun directionsHandler(startingPoint: String) : String {

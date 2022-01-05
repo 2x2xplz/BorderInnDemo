@@ -9,15 +9,20 @@ import org.http4k.format.KotlinxSerialization.auto
 import org.http4k.lens.*
 import org.http4k.lens.Header.CONTENT_TYPE
 import org.http4k.routing.header
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 // all the http4k Lenses for extracting search parameters and de-serialization of API responses
-val pathPlace = Path.string().of("start")
-val queryPlace = Query.required("start")
-val queryDaysBack = Query.optional("days")
-val geocodeLens : BiDiBodyLens<GeocodeResponse> = Body.auto<GeocodeResponse>().toLens()
-val directionsLens : BiDiBodyLens<DirectionsResponse> = Body.auto<DirectionsResponse>().toLens()
+val pathPlace : PathLens<String> = Path.string().of("start")
+val queryPlace : QueryLens<String> = Query.required("start")
+val queryDaysBack : QueryLens<String?> = Query.optional("days")
 
+fun getTime() : String = LocalDateTime.now()
+                            .atZone(ZoneId.of("America/Los_Angeles"))
+                            .format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+                            .take(19)
 
 val rootMessage : String = """
     <h4>Border Inn demo application</h4>
@@ -41,9 +46,10 @@ val appRoutes : RoutingHttpHandler = routes(
 
     "/report" bind Method.GET to { request ->
         val queryResult = queryDaysBack(request).let { if (it.isNullOrBlank()) getMostCommon() else getMostCommon(it.toLong()) }
-        Response(Status.OK).body(queryResult)
+        Response(Status.OK).body(queryResult.replace("\n", "<br />\n"))
     },
 
+    "/hello" bind Method.GET to { Response(Status.OK).body("hello world test: ${getTime()}") },
     "/" bind Method.GET to { Response(Status.OK).body(rootMessage) }
 ).withFilter(contentTypeHTMLFilter)
 

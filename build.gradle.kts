@@ -8,7 +8,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
-group = "com.example"
+group = "org.borderinn.demo"
 version = "0.2.0"
 
 
@@ -36,6 +36,8 @@ dependencies {
     implementation("org.http4k:http4k-server-undertow:$http4kVersion")
     implementation("org.http4k:http4k-format-kotlinx-serialization:$http4kVersion")
     implementation("org.http4k:http4k-serverless-lambda:$http4kVersion")
+    implementation("org.http4k:http4k-serverless-gcf:$http4kVersion")
+    implementation("org.http4k:http4k-serverless-azure:$http4kVersion")
     implementation("org.http4k:http4k-client-okhttp:$http4kVersion")
 
     implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")

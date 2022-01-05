@@ -2,6 +2,8 @@ import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.json.JsonPropertySource
 import org.http4k.serverless.ApiGatewayV2LambdaFunction
+import org.http4k.serverless.AzureFunction
+import org.http4k.serverless.GoogleCloudHttpFunction
 import org.ktorm.database.Database
 import java.io.File
 
@@ -22,7 +24,7 @@ val config: AppConfig = ConfigLoader.Builder()
     .addSource(PropertySource.file(File(System.getenv("HOPLITE_FILENAME") ?: System.getProperty("HOPLITE_FILENAME") ?: ""), optional = true))
     // fallback to dev config (should not load in production)
     .addSource(PropertySource.resource("/config_dev.yaml", optional = true))
-    .build() //.also { println("HOPLITE_JSON : ${System.getProperty("HOPLITE_JSON")}, HOPLITE_FILENAME : ${System.getProperty("HOPLITE_FILENAME")}") }
+    .build() //.also { println("HOPLITE_JSON : ${System.getenv("HOPLITE_JSON")}, HOPLITE_FILENAME : ${System.getenv("HOPLITE_FILENAME")}") }
     .loadConfigOrThrow()
 
 
@@ -40,6 +42,11 @@ val pg: Database = Database.connect(
 @Suppress("unused")
 class GatewayListener : ApiGatewayV2LambdaFunction(appRoutes)
 
+//@Suppress("unused")
+//class GCFListener : GoogleCloudHttpFunction(appRoutes)
+
+//@Suppress("unused")
+//abstract class AzureFunctionListener : AzureFunction(appRoutes)
 
 fun main() {
     println("starting app...")
