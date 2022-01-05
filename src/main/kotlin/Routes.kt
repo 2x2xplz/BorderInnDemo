@@ -11,6 +11,7 @@ import org.http4k.lens.Header.CONTENT_TYPE
 import org.http4k.routing.header
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 
@@ -19,10 +20,7 @@ val pathPlace : PathLens<String> = Path.string().of("start")
 val queryPlace : QueryLens<String> = Query.required("start")
 val queryDaysBack : QueryLens<String?> = Query.optional("days")
 
-fun getTime() : String = LocalDateTime.now()
-                            .atZone(ZoneId.of("America/Los_Angeles"))
-                            .format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
-                            .take(19)
+fun getTime() : String = ZonedDateTime.now(ZoneId.of("America/Los_Angeles")).toString().take(19)
 
 val rootMessage : String = """
     <h4>Border Inn demo application</h4>
