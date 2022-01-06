@@ -2,8 +2,6 @@ import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.json.JsonPropertySource
 import org.http4k.serverless.ApiGatewayV2LambdaFunction
-import org.http4k.serverless.AzureFunction
-import org.http4k.serverless.GoogleCloudHttpFunction
 import org.ktorm.database.Database
 import java.io.File
 
@@ -15,7 +13,7 @@ data class Destination(val name: String, val lat: Float, val lon: Float, val tim
 data class AppConfig(val portNumber: Int = System.getenv("PORT")?.toInt() ?: 0,
                      val platform: String = "dev",
                      val destination: Destination, val db: DBConfig, val geo: GeoAPI)
-
+//data class XConfig(val ipaddress: String)
 
 val config: AppConfig = ConfigLoader.Builder()
     // try loading a config JSON string directly
